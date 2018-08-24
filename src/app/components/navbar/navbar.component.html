@@ -4,7 +4,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 <div class="collapse navbar-collapse navbarColor02">
-  <ul class="navbar-nav mr-auto">
+  <ul class="navbar-nav mr-auto" *ngIf="isLogin">
     <li class="nav-item">
       <a class="nav-link" routerLink="/panel" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
     </li>
@@ -13,4 +13,10 @@
     </li>
   </ul>
 </div>
+<span class="navbar-text ml-auto mr-3">
+    {{userName}}
+  </span>
+<button class="btn btn-danger" *ngIf="isLogin" (click)="logOut()">LogOut</button>
+<a routerLink="/login" class="btn btn-warning" *ngIf="!isLogin">LogIn</a>
+<a routerLink="/register" class="btn btn-success ml-3" *ngIf="!isLogin">Register</a>
 </nav>
