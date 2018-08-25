@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BooksService } from '../../services/books.service';
 import { Book } from '../../models/Book';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { DateService } from '../../services/date.service';
 
 @Component({
   selector: 'app-edit-book',
@@ -17,28 +18,53 @@ export class EditBookComponent implements OnInit {
     private bookService: BooksService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private flashMessages: FlashMessagesService
+    private flashMessages: FlashMessagesService,
+    private dateService: DateService
   ) { }
 
   ngOnInit() {
+    this.book = {
+      name: '',
+      id: '',
+      author: '',
+      date: '',
+      description: '',
+      price: 0,
+      links: [
+        {
+          type: 'pdf',
+          link: ''
+        },
+        {
+          type: 'epub',
+          link: ''
+        }
+      ]
+    };
     this.bookId = this.activatedRoute.snapshot.params['id'];
-    this.bookService.getBookById(this.bookId).subscribe((data: Book) => {
-      this.book = data;
+    this.bookService.getBooks().subscribe((data: Book[]) => {
+      this.book = data.find(item => item.id === this.bookId);
     });
   }
 
   editBook() {
-    const updateBook = Object.assign({}, this.book);
-    this.bookService.editBook(updateBook).subscribe((item: Book) => {
-      if (item) {
-        this.router.navigate(['/panel']);
-        this.flashMessages.show('Edit Complete!!!', {
-          cssClass: 'alert alert-success',
-          showCloseBtn: true,
-          timeout: 10000
-        });
-      }
-    });
+    const updateBook = Object.assign({}, this.book, {date: this.dateService.getDate()});
+    this.bookService.editBook(updateBook)
+          .then(item => {
+              this.router.navigate(['/panel']);
+              this.flashMessages.show('Edit Complete!!!', {
+                cssClass: 'alert alert-success',
+                showCloseBtn: true,
+                timeout: 10000
+              });
+          })
+          .catch(err => {
+            this.flashMessages.show(err.message, {
+              cssClass: 'alert alert-danger',
+              showCloseBtn: true,
+              timeout: 10000
+            });
+          });
   }
 
 }

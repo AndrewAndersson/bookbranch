@@ -21,31 +21,26 @@ export class BooksService {
       return collection.map(document => {
         const data = document.payload.doc.data() as Book;
         data.id = document.payload.doc.id;
-        console.log(data);
+        // console.log(data);
         return data;
       });
     });
     return this.books;
   }
-  getBookById(id: string) {
-    const editBook = this.books.find( book => book.id === id);
-    return of(editBook);
-  }
+  // getBookById(id: string) {
+  //   const editBook = this.books.find( book => book.id === id);
+  //   return of(editBook);
+  // }
   addBook(book: Book) {
-    this.books.unshift(book);
-    return of(book);
+    return this.booksCollection.add(book);
   }
   editBook(book: Book) {
-    this.books = this.books.map((data: Book) => {
-      if (data.id === book.id) {
-        data = book;
-      }
-      return data;
-    });
-    return of(book);
+    this.bookDoc = this.afs.doc(`books/${book.id}`);
+    return this.bookDoc.update(book);
   }
   deleteBook(id: string) {
-    //
+    this.bookDoc = this.afs.doc(`books/${id}`);
+    return this.bookDoc.delete();
   }
 
 }

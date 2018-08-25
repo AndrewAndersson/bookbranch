@@ -21,6 +21,10 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { RegisterComponent } from './components/register/register.component';
+import { CustomDatePipe } from './pipes/custom-date.pipe';
+import { CurrencyComponent } from './components/currency/currency.component';
+import { CurrencyService } from './services/currency.service';
+import { DateService } from './services/date.service';
 
 
 @NgModule({
@@ -33,7 +37,9 @@ import { RegisterComponent } from './components/register/register.component';
     NotFoundComponent,
     NavbarComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    CustomDatePipe,
+    CurrencyComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,7 @@ import { RegisterComponent } from './components/register/register.component';
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  providers: [BooksService, IdService, AuthService],
+  providers: [BooksService, IdService, AuthService, CurrencyService, DateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
