@@ -25,6 +25,11 @@ import { CustomDatePipe } from './pipes/custom-date.pipe';
 import { CurrencyComponent } from './components/currency/currency.component';
 import { CurrencyService } from './services/currency.service';
 import { DateService } from './services/date.service';
+import { BasketComponent } from './components/basket/basket.component';
+import { BasketService } from './services/basket.service';
+import { ClientHomeComponent } from './components/client-home/client-home.component';
+import { ClientCheckoutComponent } from './components/client-checkout/client-checkout.component';
+import { ClientCheckoutService } from './services/client-checkout.service';
 
 
 @NgModule({
@@ -39,7 +44,10 @@ import { DateService } from './services/date.service';
     LoginComponent,
     RegisterComponent,
     CustomDatePipe,
-    CurrencyComponent
+    CurrencyComponent,
+    BasketComponent,
+    ClientHomeComponent,
+    ClientCheckoutComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +58,7 @@ import { DateService } from './services/date.service';
     AngularFirestoreModule,
     AngularFireAuthModule
   ],
-  providers: [BooksService, IdService, AuthService, CurrencyService, DateService],
+  providers: [BooksService, IdService, AuthService, CurrencyService, DateService, BasketService, ClientCheckoutService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -4,6 +4,7 @@ import { Book } from '../../models/Book';
 import { CurrencyService } from '../../services/currency.service';
 import { Currency } from '../../models/Currency';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { ClientCheckoutService } from '../../services/client-checkout.service';
 
 @Component({
   selector: 'app-panel',
@@ -15,11 +16,13 @@ export class PanelComponent implements OnInit {
   searchingResult: Book[] = [];
   searchText: string;
   currentCurrency: Currency;
+  orders = [];
 
   constructor(
     public bookService: BooksService,
     public currencyService: CurrencyService,
-    public flashMessagesService: FlashMessagesService
+    public flashMessagesService: FlashMessagesService,
+    public clientCheckoutService: ClientCheckoutService
   ) { }
 
   ngOnInit() {
@@ -33,6 +36,12 @@ export class PanelComponent implements OnInit {
     this.currencyService.selectedCurrency.subscribe(currency => {
       this.currentCurrency = Object.create(currency.find(obj => obj.isActive));
     });
+    // get orders
+    this.clientCheckoutService.checkoutEvent.subscribe(items => {
+      this.orders = items;
+      console.log('get orders in admin panel', this.orders);
+    });
+
   }
   searchBook() {
     this.searchingResult = this.books.filter(book => book.name.toLowerCase().indexOf(this.searchText) !== -1);

@@ -1,12 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-5">
-  <a class="navbar-brand" routerLink="/panel">Book Branch</a>
+  <a class="navbar-brand" routerLink="/">Book Branch</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 <div class="collapse navbar-collapse navbarColor02">
-  <ul class="navbar-nav mr-auto" *ngIf="isLogin">
+  <ul class="navbar-nav mr-auto">
     <li class="nav-item">
-      <a class="nav-link" routerLink="/panel" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/panel" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" *ngIf="isLogin">Panel</a>
     </li>
     <li class="nav-item">
       <a href="" class="nav-link" routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About</a>
@@ -15,7 +18,10 @@
 </div>
 <span class="navbar-text ml-auto mr-3">
     {{userName}}
-  </span>
+</span>
+<div class="navbar-text mr-3" *ngIf="isPublic" >
+  <app-basket></app-basket>
+</div>
 <button class="btn btn-danger" *ngIf="isLogin" (click)="logOut()">LogOut</button>
 <a routerLink="/login" class="btn btn-warning" *ngIf="!isLogin">LogIn</a>
 <a routerLink="/register" class="btn btn-success ml-3" *ngIf="!isLogin">Register</a>

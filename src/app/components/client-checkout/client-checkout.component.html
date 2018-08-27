@@ -1,0 +1,27 @@
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Count</th>
+        <th scope="col">Sum</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of basketItems">
+        <th scope="row">{{item.name}}</th>
+        <td>{{item.price | currency: 'USD'}}</td>
+        <td>
+          <input type="number" name="amount" class="form-control" id="amount" [(ngModel)]="item.amount">
+        </td>
+        <td>{{item.amount * item.price | currency: 'USD'}}</td>
+        <td>
+          <i class="fa fa-remove ml-auto text-danger" (click)="deleteItem(item.id)"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-primary" (click)="checkOut()" [disabled]="!basketItems.length">CheckOut</button>
+</div>
