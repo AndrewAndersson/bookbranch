@@ -53,13 +53,12 @@ export class OrdersComponent implements OnInit {
   }
 
   deleteBooks(order, item) {
-    order.item = order.items.splice(item, 1);
+    order.item = order.items.splice(order.items.indexOf(item.id), 1);
+    order.total = order.items.reduce((sum, book) => sum += Number(book.sum), 0);
+    if (!order.items.length) {
+      order.status = 'close';
+    }
     this.salesService.editOrder(order)
-        .then(() => {
-          if (!order.items.length) {
-            order.status = 'close';
-          }
-        })
         .catch(err => {
           this.flashMessages.show(err.message, {
             cssClass: 'alert alert-danger',
