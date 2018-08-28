@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BasketService } from '../../services/basket.service';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import { ClientCheckoutService } from '../../services/client-checkout.service';
-import { isNumber } from 'util';
 import { Router } from '@angular/router';
+import { SalesService } from '../../services/sales.service';
 
 @Component({
   selector: 'app-client-checkout',
@@ -12,34 +11,40 @@ import { Router } from '@angular/router';
 })
 export class ClientCheckoutComponent implements OnInit {
   basketItems = [];
+  name = '';
+  phone = '';
+  email = '';
+  addressIsVisible = false;
+  totalSum = 0;
 
   constructor(
     public basketService: BasketService,
     public flashMessages: FlashMessagesService,
-    public clientCheckoutService: ClientCheckoutService,
-    private router: Router
+    private router: Router,
+    public salesService: SalesService
   ) { }
 
   ngOnInit() {
     this.basketService.getBasketItem().subscribe(items => {
-      if (items.length) {
+      if (!items.length) {
+        this.router.navigate(['/']);
+      } else {
         this.basketItems = items;
-        this.basketItems.forEach(item => {
-          if (!item.amount) {
-            item = Object.assign(item, {amount: 1});
-          }
-        });
-      } else if (!this.basketItems.length) {
-        this.flashMessages.show('Your orders list is empty. Please go on to home tab', {
-          cssClass: 'alert alert-warning',
-          showCloseBtn: true,
-          timeout: 10000
-        });
+        this.totalSum = this.basketItems.reduce((sum: number, item) => sum += Number(item.sum), 0);
       }
     });
   }
+  onChangeItemCount(item) {
+    item.sum = item.price * item.count;
+    this.totalSum = this.basketItems.reduce((sum, order) => {
+      return sum += Number(order.sum);
+    }, 0);
+  }
   deleteItem(id) {
     this.basketService.deleteItem(id);
+    this.totalSum = this.basketItems.reduce((sum, order) => {
+      return sum += Number(order.sum);
+    }, 0);
     if (!this.basketItems.length) {
       this.flashMessages.show('Your orders list is empty. Please go on to home tab', {
         cssClass: 'alert alert-warning',
@@ -48,16 +53,31 @@ export class ClientCheckoutComponent implements OnInit {
       });
     }
   }
-  checkOut() {
-    this.router.navigate(['/']);
-    const sendList = [...this.basketItems];
-    this.clientCheckoutService.addCheckoutList(sendList);
-    this.basketItems.splice(0, this.basketItems.length);
-    this.flashMessages.show('The order is successful', {
-      cssClass: 'alert alert-success',
-      showCloseBtn: true,
-      timeout: 10000
-    });
+  onSubmit() {
+    const newOrder = {
+      name: this.name,
+      phone: this.phone,
+      email: this.email,
+      items: this.basketItems,
+      status: 'processing'
+    };
+    this.salesService.addNewOrder(newOrder)
+          .then(() => {
+            this.router.navigate(['/']);
+            this.basketItems.splice(0, this.basketItems.length);
+            this.flashMessages.show('Ваш заказ оформлен. Ожидайте пока с Вами свяжуться.', {
+              cssClass: 'alert alert-success',
+              showCloseBtn: true,
+              timeout: 10000
+            });
+          })
+          .catch(err => {
+            this.flashMessages.show(err.message, {
+              cssClass: 'alert alert-danger',
+              showCloseBtn: true,
+              timeout: 10000
+            });
+          });
   }
 
 }

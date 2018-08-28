@@ -4,7 +4,6 @@ import { Book } from '../../models/Book';
 import { CurrencyService } from '../../services/currency.service';
 import { Currency } from '../../models/Currency';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import { ClientCheckoutService } from '../../services/client-checkout.service';
 
 @Component({
   selector: 'app-panel',
@@ -22,7 +21,6 @@ export class PanelComponent implements OnInit {
     public bookService: BooksService,
     public currencyService: CurrencyService,
     public flashMessagesService: FlashMessagesService,
-    public clientCheckoutService: ClientCheckoutService
   ) { }
 
   ngOnInit() {
@@ -37,10 +35,6 @@ export class PanelComponent implements OnInit {
       this.currentCurrency = Object.create(currency.find(obj => obj.isActive));
     });
     // get orders
-    this.clientCheckoutService.checkoutEvent.subscribe(items => {
-      this.orders = items;
-      console.log('get orders in admin panel', this.orders);
-    });
 
   }
   searchBook() {
