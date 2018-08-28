@@ -1,0 +1,88 @@
+<div class="container">
+  <div class="mb-5" *ngFor="let order of orders; let i = index;">
+    <div class="card mb-3">
+      <div class="card-header">
+          Инфонрмация о заказе №: {{i + 1}}
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+              <label for="name">Имя {{order.name}}</label>
+              <input type="text"
+                     class="form-control"
+                     id="name"
+                     name="name"
+                     [(ngModel)]="order.name"
+                     required
+                     [readOnly]="!order.isEdit"
+              >
+          </li>
+          <li class="list-group-item">
+              <label for="email">Email {{order.email}}</label>
+              <input type="email"
+                     class="form-control"
+                     id="email"
+                     name="email"
+                     [(ngModel)]="order.email"
+                     required
+                     [readOnly]="!order.isEdit"
+              >
+          </li>
+          <li class="list-group-item">
+              <label for="phone">Телефон {{order.phone}}</label>
+              <input type="text"
+                     class="form-control"
+                     id="phone"
+                     name="phone"
+                     [(ngModel)]="order.phone"
+                     required
+                     [readOnly]="!order.isEdit"
+              >
+          </li>
+        </ul>
+        <button class="btn btn-primary mb-3 mt-3" (click)="order.isEdit = !order.isEdit; saveChanges(order)">{{order.isEdit ? 'Save': 'Edit'}}</button>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Count</th>
+          <th scope="col">Sum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items; let i = index">
+            <th>{{i + 1}}</th>
+            <th scope="row">{{item.name}}</th>
+            <td>{{item.price | currency: 'USD'}}</td>
+            <td>
+              <input type="number"
+                      name="count"
+                      [(ngModel)]="item.count"
+                      min="1"
+                      max="100"
+                      (change)="changeCountOfBooks(order, item.id)"
+              >
+            </td>
+            <td>{{item.sum | currency: 'USD'}}</td>
+            <td>
+              <i class="fa fa-remove ml-auto text-danger" (click)="deleteBooks(order, item)"></i>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{order.total | currency: 'USD'}}</td>
+            <td></td>
+          </tr>
+      </tbody>
+    </table>
+    <select class="form-control" [(ngModel)]="order.status" name="status" (change)="changeStatus(order)" [disabled]="!order.items.length">
+      <option value="processing">Processing</option>
+      <option value="shipping">Shipping</option>
+      <option value="close">Close</option>
+    </select>
+  </div>
+</div>

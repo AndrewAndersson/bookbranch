@@ -59,7 +59,8 @@ export class ClientCheckoutComponent implements OnInit {
       phone: this.phone,
       email: this.email,
       items: this.basketItems,
-      status: 'processing'
+      status: 'processing',
+      total: this.totalSum
     };
     this.salesService.addNewOrder(newOrder)
           .then(() => {

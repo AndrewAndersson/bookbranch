@@ -30,6 +30,7 @@ import { BasketService } from './services/basket.service';
 import { ClientHomeComponent } from './components/client-home/client-home.component';
 import { ClientCheckoutComponent } from './components/client-checkout/client-checkout.component';
 import { SalesService } from './services/sales.service';
+import { OrdersComponent } from './components/orders/orders.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { SalesService } from './services/sales.service';
     CurrencyComponent,
     BasketComponent,
     ClientHomeComponent,
-    ClientCheckoutComponent
+    ClientCheckoutComponent,
+    OrdersComponent
   ],
   imports: [
     BrowserModule,
